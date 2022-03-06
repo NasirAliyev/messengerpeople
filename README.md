@@ -49,7 +49,7 @@ docker-compose exec main composer install
 
 Run all tests from command :
 ```
-docker compose exec main ./vendor/bin/phpunit
+docker-compose exec main ./vendor/bin/phpunit
 ```
 You will get result like this:
 
