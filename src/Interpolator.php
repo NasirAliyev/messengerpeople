@@ -6,8 +6,8 @@ use InvalidArgumentException;
 
 class Interpolator
 {
-    const LEFT_DELIMITER = 'leftDelimiter';
-    const RIGHT_DELIMITER = 'rightDelimiter';
+    public const LEFT_DELIMITER = 'leftDelimiter';
+    public const RIGHT_DELIMITER = 'rightDelimiter';
 
     public function interpolate(string $str, array $replacement, array $options): string
     {
@@ -27,15 +27,17 @@ class Interpolator
 
     private function buildReplacementKeys(array $replacement, array $delimiters): array
     {
-        $replaceKeys = array_keys($replacement);
+        $replaceKeys = [];
 
-        foreach ($replaceKeys as &$value) {
-            $value = sprintf(
+        foreach ($replacement as $key => $val) {
+            $placeholder = sprintf(
                 "%s%s%s",
                 $delimiters[self::LEFT_DELIMITER],
-                $value,
+                $key,
                 $delimiters[self::RIGHT_DELIMITER]
             );
+
+            array_push($replaceKeys, $placeholder);
         }
 
         return $replaceKeys;
@@ -47,11 +49,10 @@ class Interpolator
             return false;
         }
 
-        if (!array_key_exists(self::LEFT_DELIMITER, $options)) {
-            return false;
-        }
-
-        if (!array_key_exists(self::RIGHT_DELIMITER, $options)) {
+        if (
+            !array_key_exists(self::LEFT_DELIMITER, $options)
+            || !array_key_exists(self::RIGHT_DELIMITER, $options)
+        ) {
             return false;
         }
 
@@ -75,6 +76,6 @@ class Interpolator
      */
     private function isAssoc(array $arr): bool
     {
-       return array_keys($arr) !== range(0, count($arr) - 1);
+        return array_keys($arr) !== range(0, count($arr) - 1);
     }
 }
